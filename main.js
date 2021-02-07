@@ -8,6 +8,7 @@ function searchMeal() {
   fetch(url)
     .then(res => res.json())
     .then(data => {
+      // console.log(data)
       const allMealNames = document.getElementsByClassName('meal-name');
       const allMealImages = document.getElementsByClassName('meal-img');
       const allItems = document.getElementsByClassName('item-div');
@@ -18,17 +19,23 @@ function searchMeal() {
         eachName.innerText = item;
         const eachImg = allMealImages[i];
         eachImg.setAttribute('src', mealImg);
-        eachItemDiv = allItems[i];
+        const eachItemDiv = allItems[i];
         eachItemDiv.style.display = 'block';
+        eachItemDiv.addEventListener('click', function () {
+          const mealDetails = document.getElementById('meal-details');
+          document.getElementById('meals').style.display = 'none';
+          mealDetails.style.display = 'block';
+          const itemId = data.meals[i].idMeal;
+          const url = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + itemId;
+          fetch(url)
+            .then(res => res.json())
+            .then(data => {
+              const mealImg = data.meals[0].strMealThumb;
+              const mealName = data.meals[0].strMeal;
+              document.getElementById('details-meal-img').setAttribute('src', mealImg);
+              document.getElementById('details-meal-name').innerText = mealName;
+            })
+        })
       }
     })
-}
-
-function doSomething() {
-  const someData = `
-  <h1>Hey how are you?</h1>
-  <p>I am fine thank you.</p>
-  `;
-  const parent = document.getElementById('practice');
-  parent.appendChild(someData);
 }
